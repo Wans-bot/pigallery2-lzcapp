@@ -1,0 +1,30 @@
+usage: pigallery2
+application:
+  subdomain: pigallery2
+  health_check:
+    test_url: http://pigallery2:80/
+    disable: false
+    start_period: 60s
+    timeout: 5s
+  upstreams:
+    - location: /
+      backend: http://pigallery2:80
+services:
+  pigallery2:
+    image: registry.lazycat.cloud/wans/bpatrik/pigallery2:714efccda897e235
+    environment:
+      - NODE_ENV=production
+      - TZ=Asia/Shanghai
+    # 声明 document.private 后，平台会自动把「应用文稿」挂成容器内的 /lzcapp/documents，
+    # 不需要也不允许在这里再写 /lzcapp/documents 的 bind（会报 missing uid）。
+    # pigallery2 默认扫描 /app/data/images；把应用「文档」目录软链过去，
+    # 用户在微服文件里放进本应用文档的照片，就能直接被相册扫描到。
+    setup_script: |
+      mkdir -p /app/data/config /app/data/tmp
+      if [ -d /lzcapp/documents ] && [ ! -L /app/data/images ]; then
+        rm -rf /app/data/images
+        ln -sfn /lzcapp/documents /app/data/images
+      fi
+    binds:
+      - /lzcapp/var/pigallery2/config:/app/data/config
+      - /lzcapp/var/pigallery2/db:/app/data/db
