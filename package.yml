@@ -1,0 +1,56 @@
+package: cloud.lazycat.app.pigallery2
+version: 3.5.2
+name: PiGallery2
+description: 轻量相册服务器：直接读取目录里的照片和视频，自动生成缩略图与时间线，支持 HEIC/RAW、地图与面部识别。
+author: bpatrik
+license: MIT
+homepage: https://github.com/bpatrik/pigallery2
+min_os_version: 1.6.0
+permissions:
+  required:
+    - net.internet
+    - document.private
+  optional: []
+locales:
+  zh-CN:
+    name: PiGallery2 相册
+    description: 轻量相册服务器，界面原生支持简体中文。直接读取微服文档目录里的照片和视频，自动生成缩略图、按时间和地点整理时间线，不依赖数据库服务，单容器即可运行，所有照片都留在自己的微服上。
+    usage: |
+      PiGallery2 是一个轻量相册，把微服「文档」目录里的照片和视频整理成可以浏览的时间线。
+
+      首次使用（只做一次）：
+      1. 把照片放进本应用的「文档」目录：在微服「文件」里找到 PiGallery2 的文档目录，
+         直接上传或拖进去即可（也可以挂载手机相册备份过去的照片）。
+      2. 打开应用，用默认账号 admin / admin 登录，先到设置里改掉管理员密码。
+      3. 界面语言默认跟随浏览器，点右上角 zh 可以切成「简体中文」。
+      4. 首次进入会自动索引，等缩略图生成完就能按时间线浏览。
+
+      常用操作：
+      - 时间线：首页按拍摄时间自动排列，支持按年、月跳转。
+      - 相册：可以自建相册把照片归类，不影响原文件。
+      - 地图：带 GPS 信息的照片会出现在地图视图里。
+      - 搜索：支持按文件名、拍摄日期、相机型号过滤。
+      - 分享：可以把某张照片或某个相册生成分享链接。
+
+      说明：
+      - 原始照片只读，应用不会修改或删除你的文件。
+      - 缩略图、索引和设置都保存在应用自己的数据目录，重启和升级都不会丢。
+      - 首次扫描大目录会比较慢，之后只处理新增文件。
+  en-US:
+    name: PiGallery2
+    description: >-
+      A lightweight photo gallery server with native Simplified Chinese UI. It reads photos and videos straight from a directory, builds thumbnails and a timeline, and needs no separate database — everything stays on your own microserver.
+    usage: |
+      PiGallery2 turns the documents folder on your microserver into a browsable photo timeline.
+
+      First run (once only):
+      1. Put your photos into this app's documents folder (visible in the Files app) — upload
+         or drag them in, or point your phone backup at it.
+      2. Open the app and sign in with admin / admin, then change the admin password in Settings.
+      3. The language follows your browser; the zh menu in the top bar switches to Simplified Chinese.
+      4. Indexing starts automatically; browse the timeline once thumbnails are ready.
+
+      Notes:
+      - The original files are read-only; the app never modifies or deletes them.
+      - Thumbnails, index and settings live in the app data directory and survive restarts and upgrades.
+      - The first scan of a large folder takes a while; later scans only handle new files.
