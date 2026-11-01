@@ -9,6 +9,44 @@ application:
   upstreams:
     - location: /
       backend: http://pigallery2:80
+  injects:
+    # ── 免密登录 ────────────────────────────────────────────────────────────
+    # pigallery2 首屏是 Angular 的登录表单（#form + #username + #password）。
+    # 默认账号 admin/admin 由上游首次启动建库时生成；这里自动填好并提交，
+    # 用户从桌面点进来直接落在画廊首页，不需要知道账号密码。
+    # 注意：用户若在设置里改了密码，注入会失效（usage 里已写明不要改）。
+    - id: pigallery2-autologin
+      'on': browser
+      auth_required: false
+      when:
+        - /*
+      do:
+        - src: |
+            <script>
+            (function () {
+              var USER = 'admin', PASS = 'admin';
+              var done = false;
+              function submit() {
+                var u = document.querySelector('#username');
+                var pw = document.querySelector('#password');
+                if (!u || !pw || done) return;
+                done = true;
+                var setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
+                setter.call(u, USER); u.dispatchEvent(new Event('input', { bubbles: true }));
+                setter.call(pw, PASS); pw.dispatchEvent(new Event('input', { bubbles: true }));
+                setTimeout(function () {
+                  var f = document.querySelector('#form');
+                  if (!f) return;
+                  if (f.requestSubmit) f.requestSubmit();
+                  else f.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+                }, 150);
+              }
+              function tick() { if (document.querySelector('#username')) submit(); }
+              if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(tick, 300); });
+              else setTimeout(tick, 300);
+              new MutationObserver(tick).observe(document.documentElement, { childList: true, subtree: true });
+            })();
+            </script>
 services:
   pigallery2:
     image: registry.lazycat.cloud/wans/bpatrik/pigallery2:714efccda897e235
